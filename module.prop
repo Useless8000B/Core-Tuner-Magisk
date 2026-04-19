@@ -1,0 +1,7 @@
+id=core_tuner_persistence
+name=Core Tuner Persistence
+version=v1
+versionCode=1
+author=Useless8000B
+description=Apply configurations on boot.
+template=3
