@@ -9,12 +9,22 @@ CONFIG_DIR="/data/core_tuner"
 magiskpolicy --live "allow init self capability sys_admin" 2>/dev/null
 magiskpolicy --live "allow priv_app sysfs_zram dir search" 2>/dev/null
 magiskpolicy --live "allow priv_app sysfs_zram file { getattr open write }" 2>/dev/null
-magiskpolicy --live "allow untrusted_app sysfs_batteryinfo file { getattr open read }" 2>/dev/null
-magiskpolicy --live "allow untrusted_app sysfs file { getattr open read }" 2>/dev/null
 
+# SELinux policy
+magiskpolicy --live 'allow untrusted_app vendor_sysfs_battery_supply file { getattr open read write }'
+magiskpolicy --live 'allow untrusted_app vendor_sysfs_battery_supply dir { search getattr open read }'
+magiskpolicy --live 'allow untrusted_app sysfs file { getattr open read }'
+magiskpolicy --live "typeattribute untrusted_app mlstrustedsubject"
+magiskpolicy --live "typeattribute vendor_sysfs_battery_supply mlstrustedobject"
+
+# Permissions
 chmod 644 /sys/class/power_supply/battery/capacity
+chmod 644 /sys/class/power_supply/battery/status
 chmod 644 /sys/class/power_supply/battery/voltage_now
 chmod 644 /sys/class/power_supply/battery/current_now
+chmod 644 /sys/class/power_supply/battery/temp
+chmod 644 /sys/class/thermal/thermal_zone36/temp
+chmod 755 /sys/class/power_supply/battery
 
 if [ -d "$CONFIG_DIR" ]; then
     if [ -f "$CONFIG_DIR/swappiness" ]; then
