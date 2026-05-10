@@ -64,30 +64,6 @@ if [ -d "$CONFIG_DIR" ]; then
         /system/bin/toybox swapon /dev/block/zram0 -p 100
         sysctl -w vm.vfs_cache_pressure=100
     fi
-
-    (
-        while true; do
-            if [ -f "$CONFIG_DIR/charge_limit" ]; then
-                LIMIT=$(cat "$CONFIG_DIR/charge_limit")
-                LEVEL=$(cat /sys/class/power_supply/battery/capacity)
-                IDLE_REQ=$(cat "$CONFIG_DIR/battery_idle_mode" 2>/dev/null || echo "0")
-
-                if [ "$IDLE_REQ" == "1" ]; then
-                    echo 1 > /sys/class/power_supply/battery/input_suspend 2>/dev/null
-                    echo 0 > /sys/class/power_supply/battery/charging_enabled 2>/dev/null
-                else
-                    if [ "$LEVEL" -ge "$LIMIT" ]; then
-                        echo 1 > /sys/class/power_supply/battery/input_suspend 2>/dev/null
-                        echo 0 > /sys/class/power_supply/battery/charging_enabled 2>/dev/null
-                    elif [ "$LEVEL" -lt "$((LIMIT - 2))" ]; then
-                        echo 0 > /sys/class/power_supply/battery/input_suspend 2>/dev/null
-                        echo 1 > /sys/class/power_supply/battery/charging_enabled 2>/dev/null
-                    fi
-                fi
-            fi
-            sleep 60
-        done
-    ) &
 fi
 
 echo "Core Tuner: Tweaks applied with success at $(date)" >> $CONFIG_DIR/last_boot.log
