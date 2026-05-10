@@ -2,7 +2,7 @@
 # Core Tuner - Persistence Script
 
 MODDIR=${0%/*}
-sleep 20
+sleep 15
 
 CONFIG_DIR="/data/core_tuner"
 
@@ -11,11 +11,8 @@ magiskpolicy --live "allow priv_app sysfs_zram dir search" 2>/dev/null
 magiskpolicy --live "allow priv_app sysfs_zram file { getattr open write }" 2>/dev/null
 
 # SELinux policy
-magiskpolicy --live 'allow untrusted_app vendor_sysfs_battery_supply file { getattr open read write }'
-magiskpolicy --live 'allow untrusted_app vendor_sysfs_battery_supply dir { search getattr open read }'
-magiskpolicy --live 'allow untrusted_app sysfs file { getattr open read }'
-magiskpolicy --live "typeattribute untrusted_app mlstrustedsubject"
-magiskpolicy --live "typeattribute vendor_sysfs_battery_supply mlstrustedobject"
+magiskpolicy --live 'allow untrusted_app { sysfs_thermal sysfs_batteryinfo sysfs_power_supply } file { read open getattr }'
+magiskpolicy --live 'allow untrusted_app { sysfs_thermal sysfs_batteryinfo sysfs_power_supply } dir { search }'
 
 # Permissions
 chmod 644 /sys/class/power_supply/battery/capacity
