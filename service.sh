@@ -11,8 +11,13 @@ magiskpolicy --live "allow priv_app sysfs_zram dir search" 2>/dev/null
 magiskpolicy --live "allow priv_app sysfs_zram file { getattr open write }" 2>/dev/null
 
 # SELinux policy
-magiskpolicy --live 'allow untrusted_app { sysfs_thermal sysfs_batteryinfo sysfs_power_supply } file { read open getattr }'
-magiskpolicy --live 'allow untrusted_app { sysfs_thermal sysfs_batteryinfo sysfs_power_supply } dir { search }'
+magiskpolicy --live "allow untrusted_app sysfs_thermal file { read open getattr }"
+magiskpolicy --live "allow untrusted_app sysfs_batteryinfo file { read open getattr }"
+magiskpolicy --live "allow untrusted_app sysfs file { read open getattr }"
+magiskpolicy --live "allow untrusted_app vendor_sysfs_battery_supply dir search"
+magiskpolicy --live "allow untrusted_app vendor_sysfs_battery_supply file { read open getattr }"
+magiskpolicy --live "allow untrusted_app sysfs_zram dir { search open read }"
+magiskpolicy --live "allow untrusted_app sysfs_zram file { read open getattr }"
 
 # Permissions
 chmod 644 /sys/class/power_supply/battery/capacity
