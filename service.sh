@@ -19,15 +19,6 @@ magiskpolicy --live "allow untrusted_app vendor_sysfs_battery_supply file { read
 magiskpolicy --live "allow untrusted_app sysfs_zram dir { search open read }"
 magiskpolicy --live "allow untrusted_app sysfs_zram file { read open getattr }"
 
-# Permissions
-chmod 644 /sys/class/power_supply/battery/capacity
-chmod 644 /sys/class/power_supply/battery/status
-chmod 644 /sys/class/power_supply/battery/voltage_now
-chmod 644 /sys/class/power_supply/battery/current_now
-chmod 644 /sys/class/power_supply/battery/temp
-chmod 644 /sys/class/thermal/thermal_zone36/temp
-chmod 755 /sys/class/power_supply/battery
-
 if [ -d "$CONFIG_DIR" ]; then
     if [ -f "$CONFIG_DIR/swappiness" ]; then
         echo "$(cat $CONFIG_DIR/swappiness)" > /proc/sys/vm/swappiness
