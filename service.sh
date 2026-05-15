@@ -18,6 +18,7 @@ magiskpolicy --live "allow untrusted_app vendor_sysfs_battery_supply dir search"
 magiskpolicy --live "allow untrusted_app vendor_sysfs_battery_supply file { read open getattr }"
 magiskpolicy --live "allow untrusted_app sysfs_zram dir { search open read }"
 magiskpolicy --live "allow untrusted_app sysfs_zram file { read open getattr }"
+magiskpolicy --live 'allow untrusted_app proc file { read open read getattr}'
 
 if [ -d "$CONFIG_DIR" ]; then
     if [ -f "$CONFIG_DIR/swappiness" ]; then
@@ -48,18 +49,7 @@ if [ -d "$CONFIG_DIR" ]; then
         BATT_IDLE=$(cat $CONFIG_DIR/battery_idle_mode)
         echo "$BATT_IDLE" > /sys/class/power_supply/battery/input_suspend 2>/dev/null
         echo "$BATT_IDLE" > /sys/class/power_supply/battery/charging_enabled 2>/dev/null
-    fi
-
-    if [ -f "$CONFIG_DIR/zram_enabled" ] && [ "$(cat $CONFIG_DIR/zram_enabled)" == "1" ]; then
-        /system/bin/toybox swapoff /dev/block/zram0 > /dev/null 2>&1
-        echo 1 > /sys/block/zram0/reset 2>/dev/null
-        echo lz4 > /sys/block/zram0/comp_algorithm 2>/dev/null
-        echo 8 > /sys/block/zram0/max_comp_streams 2>/dev/null
-        echo 2147483648 > /sys/block/zram0/disksize || echo 1G > /sys/block/zram0/disksize
-        /system/bin/toybox mkswap /dev/block/zram0
-        /system/bin/toybox swapon /dev/block/zram0 -p 100
-        sysctl -w vm.vfs_cache_pressure=100
-    fi
+    fi 
 fi
 
 echo "Core Tuner: Tweaks applied with success at $(date)" >> $CONFIG_DIR/last_boot.log
