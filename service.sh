@@ -10,7 +10,7 @@ magiskpolicy --live "allow init self capability sys_admin" 2>/dev/null
 magiskpolicy --live "allow priv_app sysfs_zram dir search" 2>/dev/null
 magiskpolicy --live "allow priv_app sysfs_zram file { getattr open write }" 2>/dev/null
 
-# SELinux policy
+# SELinux Policy - Testing stage
 magiskpolicy --live "allow untrusted_app sysfs_thermal file { read open getattr }"
 magiskpolicy --live "allow untrusted_app sysfs_batteryinfo file { read open getattr }"
 magiskpolicy --live "allow untrusted_app sysfs file { read open getattr }"
