@@ -7,18 +7,10 @@ sleep 15
 CONFIG_DIR="/data/core_tuner"
 
 magiskpolicy --live "allow init self capability sys_admin" 2>/dev/null
-magiskpolicy --live "allow priv_app sysfs_zram dir search" 2>/dev/null
-magiskpolicy --live "allow priv_app sysfs_zram file { getattr open write }" 2>/dev/null
 
-# SELinux Policy - Testing stage
-magiskpolicy --live "allow untrusted_app sysfs_thermal file { read open getattr }"
-magiskpolicy --live "allow untrusted_app sysfs_batteryinfo file { read open getattr }"
-magiskpolicy --live "allow untrusted_app sysfs file { read open getattr }"
-magiskpolicy --live "allow untrusted_app vendor_sysfs_battery_supply dir search"
-magiskpolicy --live "allow untrusted_app vendor_sysfs_battery_supply file { read open getattr }"
-magiskpolicy --live "allow untrusted_app sysfs_zram dir { search open read }"
-magiskpolicy --live "allow untrusted_app sysfs_zram file { read open getattr }"
-magiskpolicy --live 'allow untrusted_app proc file { read open read getattr}'
+magiskpolicy --live "type core_tuner_app"
+magiskpolicy --live "typeattribute core_tuner_app appdomain"
+magiskpolicy --live "permissive core_tuner_app"
 
 if [ -d "$CONFIG_DIR" ]; then
     if [ -f "$CONFIG_DIR/swappiness" ]; then
@@ -38,8 +30,8 @@ if [ -d "$CONFIG_DIR" ]; then
         echo "$GOV" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor > /dev/null 2>&1
     fi
 
-    if [ -f "$CONFIG_DIR/lmk_minfree" ]; then
-        LMK_VAL=$(cat $CONFIG_DIR/lmk_minfree)
+    if [ -f "$CONFIG_DIR/low_memory_killer" ]; then
+        LMK_VAL=$(cat $CONFIG_DIR/low_memory_killer)
         setprop persist.sys.lmk.minfree_levels "$LMK_VAL"
         setprop sys.lmk.minfree_levels "$LMK_VAL"
         killall -HUP lmkd 2>/dev/null
