@@ -36,12 +36,6 @@ if [ -d "$CONFIG_DIR" ]; then
         setprop sys.lmk.minfree_levels "$LMK_VAL"
         killall -HUP lmkd 2>/dev/null
     fi
-
-    if [ -f "$CONFIG_DIR/battery_idle_mode" ]; then
-        BATT_IDLE=$(cat $CONFIG_DIR/battery_idle_mode)
-        echo "$BATT_IDLE" > /sys/class/power_supply/battery/input_suspend 2>/dev/null
-        echo "$BATT_IDLE" > /sys/class/power_supply/battery/charging_enabled 2>/dev/null
-    fi 
 fi
 
 echo "Core Tuner: Tweaks applied with success at $(date)" >> $CONFIG_DIR/last_boot.log
